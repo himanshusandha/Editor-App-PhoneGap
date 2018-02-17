@@ -10,6 +10,7 @@
     <title>Hello World</title>
 </head>
 <body>
+    <input type="button" value="Create New File" style="background-color:inherit;border:0px;padding:3px;" onclick="newFile()" /><br/>
     <div id="btn_grp">
 <button class="tablink" onclick="openPage('Frameeg1', this)" onmouseover="closebtndis(this)" onmouseout="closebtnin(this)">new 0.txt
   <span onclick="closePage('Frameeg1',this)" class="closebtn">X</span>
@@ -37,58 +38,39 @@
 <div id="Frameeg4" class="tabcontent">
 <iframe src="coding_area.html"></iframe>
 </div>
-
 <script src="js/close.js"></script>
 <script src="js/open.js"></script>
 <script src="js/general_script_index.js"></script>
 <script>
-const {ipcRenderer}=require('electron');
 //newFile
-ipcRenderer.on('newFile', function(event,args){
-  var btn = document.createElement("button");
-  btn.setAttribute("class","tablink");
-  btn.setAttribute("onclick","openPage('Frameeg5', this)");
-  btn.setAttribute("onmouseover","closebtndis(this)");
-  btn.setAttribute("onmouseout","closebtnin(this)");
-  btn.innerHTML="untitled."+args;
+	function newFile(){
+	  var btn = document.createElement("button");
+	  btn.setAttribute("class","tablink");
+	  btn.setAttribute("onclick","openPage('Frameeg5', this)");
+	  btn.setAttribute("onmouseover","closebtndis(this)");
+	  btn.setAttribute("onmouseout","closebtnin(this)");
+	  btn.innerHTML="untitled.txt";
 
-  var sp=document.createElement("span");
-  sp.setAttribute("onclick","closePage('Frameeg5',this)");
-  sp.setAttribute("class","closebtn");
-  sp.innerHTML="X";
+	  var sp=document.createElement("span");
+	  sp.setAttribute("onclick","closePage('Frameeg5',this)");
+	  sp.setAttribute("class","closebtn");
+	  sp.innerHTML="X";
 
-  btn.appendChild(sp);
-  document.getElementById("btn_grp").appendChild(btn);
+	  btn.appendChild(sp);
+	  document.getElementById("btn_grp").appendChild(btn);
 
-  var div_frm=document.createElement("div");
-  div_frm.setAttribute("id","Frameeg5");
-  div_frm.setAttribute("class","tabcontent");
+	  var div_frm=document.createElement("div");
+	  div_frm.setAttribute("id","Frameeg5");
+	  div_frm.setAttribute("class","tabcontent");
 
-  var ifrm=document.createElement("iframe");
-  ifrm.setAttribute("src","coding_area.html");
+	  var ifrm=document.createElement("iframe");
+	  ifrm.setAttribute("src","coding_area.html");
 
-  div_frm.appendChild(ifrm);
-  document.body.appendChild(div_frm);
+	  div_frm.appendChild(ifrm);
+	  document.body.appendChild(div_frm);
 
-  btn.click();
-});
-
-//saveFile
-  ipcRenderer.on('saveFile', function(event,args){
-    var tabcontent=document.getElementsByClassName("tabcontent");
-    var currentArea;
-    for(i=0;i<tabcontent.length;i++){
-      if(tabcontent[i].style.display=="block"){
-        currentArea="Frameeg"+(i+1);
-        alert(currentArea);
-        break;
-      }
-    }
-    var ifrm=document.getElementById(currentArea).children[0];
-    var yx=ifrm.contentWindow.document;
-    yx.getElementById("Save").click();
-  });
+	  btn.click();
+	}
 </script>
-
 </body>
 </html>
