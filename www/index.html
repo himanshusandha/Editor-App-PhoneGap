@@ -6,78 +6,89 @@
     <meta name="msapplication-tap-highlight" content="no" />
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
     <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' gap:; style-src 'self' 'unsafe-inline'; media-src *" />
-    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <link rel="stylesheet" type="text/css" href="css/css_index.css">
     <title>Hello World</title>
 </head>
 <body>
-	<h1>Himanshu</h1>
-    <div id="listing">
-      <ol id="myOl" onkeyup="myOl_keyup(event)" onclick="myOl_click_selectrow(event)" onkeydown="myOl_keydown(event)" contenteditable="true">
-        <li></li>
-      </ol>
-    </div>
-	 <br><br>
-    <input type="file" id="fileLoader" />
-    <input type="button" id="Save" value="Save File" onclick="saveFile()" />
-  </body>
-	<script>
-	 document.getElementById("fileLoader").onchange=function(){
-    var file=document.getElementById("fileLoader").files[0];
-    var fileReader=new FileReader();
-    fileReader.onload=function(e){
-    var getText=e.target.result;
-    showdata(getText);
-    }
-    fileReader.readAsText(file,"UTF-8");
-  };
+    <div id="btn_grp">
+<button class="tablink" onclick="openPage('Frameeg1', this)" onmouseover="closebtndis(this)" onmouseout="closebtnin(this)">new 0.txt
+  <span onclick="closePage('Frameeg1',this)" class="closebtn">X</span>
+</button>
+<button class="tablink" onclick="openPage('Frameeg2', this)" onmouseover="closebtndis(this)" onmouseout="closebtnin(this)">index.html
+  <span onclick="closePage('Frameeg2',this)" class="closebtn">X</span>
+</button>
+<button class="tablink" onclick="openPage('Frameeg3', this)" onmouseover="closebtndis(this)" onmouseout="closebtnin(this)">new 1.txt
+  <span onclick="closePage('Frameeg3',this)" class="closebtn">X</span>
+</button>
+<button class="tablink" onclick="openPage('Frameeg4', this)" onmouseover="closebtndis(this)" onmouseout="closebtnin(this)">index 1.html
+  <span onclick="closePage('Frameeg4',this)" class="closebtn">X</span>
+</button>
+</div>
 
-  function showdata(getText) {
-    var stri=getText.split("\n");
-    for (i = 0; i < stri.length; i++) {
-      var y =document.createElement("LI");
-      y.textContent=stri[i];
-      document.getElementById("myOl").appendChild(y);
-      row_num++;
-    }
-  }
+<div id="Frameeg1" class="tabcontent">
+<iframe src="coding_area.html"></iframe>
+</div>
+<div id="Frameeg2" class="tabcontent">
+<iframe src="coding_area.html"></iframe>
+</div>
+<div id="Frameeg3" class="tabcontent">
+<iframe src="coding_area.html"></iframe>
+</div>
+<div id="Frameeg4" class="tabcontent">
+<iframe src="coding_area.html"></iframe>
+</div>
 
-  function saveFile(){
-	  data();
-    var textBLOB=new Blob([saveText],{type:"text/plain"});
-    var fileName="new 0";
-    var link=document.createElement("a");
-    link.download=fileName;
-    link.innerHTML="Download File";
-    if(window.URL!=null){
-      link.href=window.URL.createObjectURL(textBLOB);
-    }else{
-      link.href=window.URL.createObjectURL(textBLOB);
-      link.onclick=destroy;
-      link.style.display="none";
-      document.body.appendChild(link);
-    }
-    link.click();
-    saveText="";
-  }
-  function destroy(e){
-    document.body.removeChild(e.target);
-  }
+<script src="js/close.js"></script>
+<script src="js/open.js"></script>
+<script src="js/general_script_index.js"></script>
+<script>
+const {ipcRenderer}=require('electron');
+//newFile
+ipcRenderer.on('newFile', function(event,args){
+  var btn = document.createElement("button");
+  btn.setAttribute("class","tablink");
+  btn.setAttribute("onclick","openPage('Frameeg5', this)");
+  btn.setAttribute("onmouseover","closebtndis(this)");
+  btn.setAttribute("onmouseout","closebtnin(this)");
+  btn.innerHTML="untitled."+args;
 
-  var saveText=" ";
-  function data() {
-    var n=document.getElementById("myOl").childElementCount; /*length start with 1*/
-    var c = document.getElementById("myOl").children;
-    for (i = 0; i < n; i++) {
-        saveText=saveText + c[i].textContent + "\n";
+  var sp=document.createElement("span");
+  sp.setAttribute("onclick","closePage('Frameeg5',this)");
+  sp.setAttribute("class","closebtn");
+  sp.innerHTML="X";
+
+  btn.appendChild(sp);
+  document.getElementById("btn_grp").appendChild(btn);
+
+  var div_frm=document.createElement("div");
+  div_frm.setAttribute("id","Frameeg5");
+  div_frm.setAttribute("class","tabcontent");
+
+  var ifrm=document.createElement("iframe");
+  ifrm.setAttribute("src","coding_area.html");
+
+  div_frm.appendChild(ifrm);
+  document.body.appendChild(div_frm);
+
+  btn.click();
+});
+
+//saveFile
+  ipcRenderer.on('saveFile', function(event,args){
+    var tabcontent=document.getElementsByClassName("tabcontent");
+    var currentArea;
+    for(i=0;i<tabcontent.length;i++){
+      if(tabcontent[i].style.display=="block"){
+        currentArea="Frameeg"+(i+1);
+        alert(currentArea);
+        break;
       }
     }
-  </script>
-  <script src="setInterval_coloring_active.js"></script>
-  <script src="myOl_click_selectrow.js"></script>
-  <script src="myOl_keydown.js"></script>
-  <script src="myOl_keyup.js"></script>
-   <script type="text/javascript" src="cordova.js"></script>
-   <script type="text/javascript" src="js/index.js"></script>
-</body>
+    var ifrm=document.getElementById(currentArea).children[0];
+    var yx=ifrm.contentWindow.document;
+    yx.getElementById("Save").click();
+  });
+</script>
 
+</body>
 </html>
